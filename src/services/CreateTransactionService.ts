@@ -10,7 +10,7 @@ interface Request {
   title: string;
   value: number;
   type: 'income' | 'outcome';
-  category: string; // Acho que não é isso
+  category: string;
 }
 
 class CreateTransactionService {
@@ -60,6 +60,7 @@ class CreateTransactionService {
 
       return transaction;
     } catch (err) {
+      console.log(err);
       throw new AppError('Database operation is not concluded.');
     }
   }

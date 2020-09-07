@@ -7,6 +7,7 @@ import TransactionsRepository from '../repositories/TransactionsRepository';
 import CreateTransactionService from '../services/CreateTransactionService';
 import DeleteTransactionService from '../services/DeleteTransactionService';
 import ImportTransactionsService from '../services/ImportTransactionsService';
+import AppError from '../errors/AppError';
 
 const transactionsRouter = Router();
 
@@ -26,21 +27,17 @@ transactionsRouter.get('/', async (request, response) => {
 });
 
 transactionsRouter.post('/', async (request, response) => {
-  try {
-    const { title, value, type, category } = request.body;
-    const createTransaction = new CreateTransactionService();
+  const { title, value, type, category } = request.body;
+  const createTransaction = new CreateTransactionService();
 
-    const transaction = await createTransaction.execute({
-      title,
-      value,
-      type,
-      category,
-    });
+  const transaction = await createTransaction.execute({
+    title,
+    value,
+    type,
+    category,
+  });
 
-    return response.json(transaction);
-  } catch (err) {
-    return response.status(err.statusCode).json({ error: err.message });
-  }
+  return response.json(transaction);
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {

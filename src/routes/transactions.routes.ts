@@ -7,23 +7,20 @@ import TransactionsRepository from '../repositories/TransactionsRepository';
 import CreateTransactionService from '../services/CreateTransactionService';
 import DeleteTransactionService from '../services/DeleteTransactionService';
 import ImportTransactionsService from '../services/ImportTransactionsService';
-import AppError from '../errors/AppError';
+
 
 const transactionsRouter = Router();
 
 transactionsRouter.get('/', async (request, response) => {
-  try {
-    const transactionRepository = getCustomRepository(TransactionsRepository);
-    const transactions = await transactionRepository.find();
-    const balance = await transactionRepository.getBalance();
 
-    return response.json({
-      transactions,
-      balance,
-    });
-  } catch (err) {
-    return response.status(err.statusCode).json({ error: err.message });
-  }
+  const transactionRepository = getCustomRepository(TransactionsRepository);
+  const transactions = await transactionRepository.find();
+  const balance = await transactionRepository.getBalance();
+
+  return response.json({
+    transactions,
+    balance,
+  });
 });
 
 transactionsRouter.post('/', async (request, response) => {
@@ -41,15 +38,13 @@ transactionsRouter.post('/', async (request, response) => {
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {
-  try {
-    const { id } = request.params;
-    const deleteTransaction = new DeleteTransactionService();
+  
+  const { id } = request.params;
+  const deleteTransaction = new DeleteTransactionService();
 
-    await deleteTransaction.execute(id);
-    return response.status(201).send();
-  } catch (err) {
-    return response.status(err.statusCode).json({ error: err.message });
-  }
+  await deleteTransaction.execute(id);
+  return response.status(201).send();
+  
 });
 
 const upload = multer(uploadConfig);
